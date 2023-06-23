@@ -1,7 +1,7 @@
 import React from "react";
 import {DotLoader} from "react-spinners";
 import {useSelector} from "react-redux";
-import {FORECAST_STATUS} from "../const";
+import {RESOURCE_STATUS} from "../const";
 import {stringifyCoords} from "./logic";
 import {WeatherDay} from "./weather-day";
 import {WeatherDisplayWrapper} from "./WeatherDisplayWrapper";
@@ -22,15 +22,15 @@ export const WeatherDisplay = () => {
     const currentForecast = useSelector(state => state.weather.cachedForecasts[currentQuery]);
 
     switch (status) {
-        case FORECAST_STATUS.LOADING:
+        case RESOURCE_STATUS.LOADING:
             return (<>
                 <DotLoader/>
             </>);
-        case FORECAST_STATUS.ERROR:
+        case RESOURCE_STATUS.ERROR:
             return (<>
                 There was an error loading the forecast.
             </>);
-        case FORECAST_STATUS.READY:
+        case RESOURCE_STATUS.READY:
             switch (currentType.value) {
                 case 'current':
                     return (
@@ -58,7 +58,7 @@ export const WeatherDisplay = () => {
                         PLACEHOLDER
                     </>)
             }
-        case FORECAST_STATUS.NONE:
+        case RESOURCE_STATUS.NONE:
         default:
             return (<></>)
     }

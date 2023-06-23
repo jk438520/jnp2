@@ -4,7 +4,7 @@ export const FORECAST_TYPES = [
     {value: "current", label: "Current"},
 ]
 
-export const FORECAST_STATUS = {
+export const RESOURCE_STATUS = {
     READY: "ready",
     LOADING: "loading",
     ERROR: "error",

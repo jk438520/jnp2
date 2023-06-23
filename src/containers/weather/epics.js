@@ -1,11 +1,11 @@
 import {combineEpics, ofType} from "redux-observable";
-import {ACTION_SET_CACHED_FORECASTS, ACTION_SET_CURRENT_TYPE, ACTION_SET_STATUS} from "./reducer";
+import {WEATHER_ACTION_SET_CACHED_FORECASTS, WEATHER_ACTION_SET_CURRENT_TYPE, WEATHER_ACTION_SET_STATUS} from "./reducer";
 import {mergeMap} from "rxjs/operators";
 import {EMPTY, filter, map, Observable} from "rxjs";
 import {stringifyCoords} from "./weather-display/logic";
 import {API_KEY, WEATHER_API} from "../../config";
 import {ACTION_CLEAR_CURRENT, ACTION_SET_CURRENT} from "../geolocation-menu/reducer";
-import {FORECAST_STATUS} from "./const";
+import {RESOURCE_STATUS} from "./const";
 
 const loadingWeatherForecastEpic = (action$, state$) => action$.pipe(
     ofType(ACTION_SET_CURRENT),
@@ -14,13 +14,13 @@ const loadingWeatherForecastEpic = (action$, state$) => action$.pipe(
             const cachedForecast = state$.value.weather.cachedForecasts[query];
             if (!cachedForecast) {
                 return {
-                    type: ACTION_SET_STATUS,
-                    payload: {status: FORECAST_STATUS.LOADING}
+                    type: WEATHER_ACTION_SET_STATUS,
+                    payload: {status: RESOURCE_STATUS.LOADING}
                 }
             } else {
                 return {
-                    type: ACTION_SET_STATUS,
-                    payload: {status: FORECAST_STATUS.READY}
+                    type: WEATHER_ACTION_SET_STATUS,
+                    payload: {status: RESOURCE_STATUS.READY}
                 };
             }
         }
@@ -32,15 +32,15 @@ const noGeolocationEpic = (action$, state$) => action$.pipe(
     filter(() => !state$.value.geolocation.current),
     map(() => {
             return {
-                type: ACTION_SET_STATUS,
-                payload: {status: FORECAST_STATUS.NONE}
+                type: WEATHER_ACTION_SET_STATUS,
+                payload: {status: RESOURCE_STATUS.NONE}
             }
         }
     )
 );
 
 const fetchWeatherForecastEpic = (action$, state$) => action$.pipe(
-    ofType(ACTION_SET_CURRENT_TYPE, ACTION_SET_CURRENT),
+    ofType(WEATHER_ACTION_SET_CURRENT_TYPE, ACTION_SET_CURRENT),
     filter(() => state$.value.geolocation.current),
     filter(() => {
         const query = stringifyCoords(state$.value.geolocation.current);
@@ -66,7 +66,7 @@ const fetchWeatherForecastEpic = (action$, state$) => action$.pipe(
                 .then(response => response.json())
                 .then(data => {
                         return {
-                            type: ACTION_SET_CACHED_FORECASTS,
+                            type: WEATHER_ACTION_SET_CACHED_FORECASTS,
                             payload: {
                                 forecasts: {
                                     [query]: data
