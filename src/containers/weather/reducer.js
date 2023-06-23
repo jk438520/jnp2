@@ -23,9 +23,13 @@ export const weatherSlice = createSlice({
             state.currentType = action.payload.currentType;
         },
         [SET_CACHED_FORECAST]: (state, action) => {
-            console.log("set cached forecast");
-            Object.assign(state.cachedForecasts, action.payload.forecasts);
+            for(const key in action.payload.forecasts) {
+                state.cachedForecasts[key] = action.payload.forecasts[key];
+            }
             state.status = FORECAST_STATUS.READY;
+        },
+        [SET_STATUS]: (state, action) => {
+            state.status = action.payload.status;
         }
     }
 })

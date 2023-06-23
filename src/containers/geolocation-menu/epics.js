@@ -8,7 +8,7 @@ import {
     BY_CITY_NAME,
     BY_COORDINATES
 } from "./reducer";
-import { ACTION_SET_CHOICE} from "./city-choice/reducer";
+import {ACTION_CLEAR_CHOICE, ACTION_SET_CHOICE} from "./city-choice/reducer";
 
 const setMethodToCityEpic = (action$, state$) =>
     action$.pipe(
@@ -52,10 +52,9 @@ const setMethodToGeoEpic = (action$, state$) =>
     )
 const catchCityChangeEpic = (action$, state$) =>
     action$.pipe(
-        ofType(ACTION_SET_CHOICE),
-        map(action => {
-            const currentCity = action.payload.choice;
-            console.log("catch city change")
+        ofType(ACTION_SET_CHOICE, ACTION_CLEAR_CHOICE),
+        map(() => {
+            const currentCity = state$.value.cityChoice.choice;
             if (currentCity) {
                 return {
                     type: ACTION_SET_CURRENT,

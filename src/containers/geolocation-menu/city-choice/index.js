@@ -18,18 +18,15 @@ export const CityChoice = () => {
                 isClearable={true}
                 isDisabled={currentMethod.localeCompare(BY_CITY_NAME)}
                 onChange={(e) => {
-                    console.log("onChange e: ", e);
                     if(e)
                         dispatch(setChoice({choice: e}));
                     else
                         dispatch(clearChoice());
                 }}
                 onInputChange={(e) => {
-                    console.log("onInputChange e: ", e);
                     dispatch(setSearch({search: e}));
                 }}
                 isOptionSelected={(option) => {
-                    console.log("isOptionSelected option: ", option);
                     if (choice === null)
                         return false;
                     else {

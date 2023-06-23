@@ -11,7 +11,6 @@ const fetchAutocompleteEpic = (action$, state$) => action$.pipe(
                 return fetch(`${WEATHER_API}/search.json?key=${API_KEY}&q=''${search}`)
                     .then(response => response.json())
                     .then(data => {
-                            console.log(data);
                             return {
                                 type: ACTION_SET_SUGGESTIONS,
                                 payload: {

@@ -2,7 +2,6 @@ import React from "react";
 import {WeatherDayWrapper} from "./WeatherDayWrapper";
 
 export const WeatherDay = ({data, time = null}) => {
-    console.log("weather day", data, time);
     const dateStr = time ? time : data.date;
     const maxtemp_c = data.maxtemp_c;
     const mintemp_c = data.mintemp_c;

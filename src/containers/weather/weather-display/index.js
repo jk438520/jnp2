@@ -12,7 +12,6 @@ const timestampWithinDay = (timestamp) => {
     const now = new Date();
     const nextDay = new Date(now.getTime() + 24 * 60 * 60 * 1000);
     const date = new Date(timestamp * 1000);
-    console.log("timestamp within day", now, date, nextDay);
     return date >= now && date <= nextDay;
 }
 
@@ -21,7 +20,6 @@ export const WeatherDisplay = () => {
     const currentQuery = useSelector(state => stringifyCoords(state.geolocation.current));
     const currentType = useSelector(state => state.weather.currentType);
     const currentForecast = useSelector(state => state.weather.cachedForecasts[currentQuery]);
-    console.log("rerender of weather display", status, currentQuery, currentForecast);
 
     switch (status) {
         case FORECAST_STATUS.LOADING:
@@ -35,7 +33,6 @@ export const WeatherDisplay = () => {
         case FORECAST_STATUS.READY:
             switch (currentType.value) {
                 case 'current':
-                    console.log("current forecast", currentForecast.current)
                     return (
                         <WeatherDisplayWrapper>
                             <WeatherDay data={currentForecast.current} time={currentForecast.current.last_updated}/>
@@ -48,7 +45,6 @@ export const WeatherDisplay = () => {
                             R.flatten,
                             R.filter((forecast) => timestampWithinDay(forecast.time_epoch)),
                         )(currentForecast.forecast.forecastday);
-                    console.log("hourly forecasts", forecasts);
                     return (<WeatherDisplayWrapper>
                         {R.map((forecast) => <WeatherDay data={forecast} time={forecast.time}/>, forecasts)}
                     </WeatherDisplayWrapper>)
