@@ -14,8 +14,10 @@ export const GeolocationType = () => {
                 options={options}
                 defaultValue={options[0]}
                 onChange={
-                    (e) =>
-                        dispatch(setCurrentMethod({currentMethod: e.value}))
+                    (e) => {
+                        console.log("geolocation change event: ", e)
+                        return dispatch(setCurrentMethod({currentMethod: e.value}))
+                    }
                 }
 
             />

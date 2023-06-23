@@ -1,6 +1,6 @@
 import {ofType, combineEpics} from 'redux-observable';
-import {mergeMap} from 'rxjs';
-import {getGeolocation} from "./logic";
+import {filter, map, mergeMap} from 'rxjs';
+import {getUserCoordinates} from "./logic";
 import {
     ACTION_CLEAR_CURRENT,
     ACTION_SET_CURRENT,
@@ -8,50 +8,67 @@ import {
     BY_CITY_NAME,
     BY_COORDINATES
 } from "./reducer";
-import {EMPTY} from "rxjs";
+import { ACTION_SET_CHOICE} from "./city-choice/reducer";
 
-const setCurrentEpic = (action$, state$) =>
+const setMethodToCityEpic = (action$, state$) =>
     action$.pipe(
         ofType(ACTION_SET_CURRENT_METHOD),
-        mergeMap(
-            action => {
-                const currentMethod = action.payload.currentMethod;
-                console.log("setCurrentEpic: ", currentMethod)
-                switch (currentMethod) {
-                    case BY_CITY_NAME:
-                        console.log("by city name");
-                        const currentCity = state$.value.cityChoice.choice;
-                        if (currentCity) {
-                            return {
-                                type: ACTION_SET_CURRENT,
-                                payload: {current: currentCity}
-                            }
-                        } else {
-                            return {type: ACTION_CLEAR_CURRENT}
-                        }
-                    case BY_COORDINATES:
-                        console.log("by coords");
-                        const coords = getGeolocation();
-                        if (coords) {
+        filter(action => action.payload.currentMethod === BY_CITY_NAME),
+        map(action => {
+                const currentCity = state$.value.cityChoice.choice;
+                if (currentCity) {
+                    return {
+                        type: ACTION_SET_CURRENT,
+                        payload: {current: currentCity}
+                    }
+                } else {
+                    return {
+                        type: ACTION_CLEAR_CURRENT
+                    }
+                }
+            }
+        )
+    )
+
+const setMethodToGeoEpic = (action$, state$) =>
+    action$.pipe(
+        ofType(ACTION_SET_CURRENT_METHOD),
+        filter(action => action.payload.currentMethod === BY_COORDINATES),
+        mergeMap(action => {
+                return getUserCoordinates().then(
+                    coords => {
+                        if(coords){
                             return {
                                 type: ACTION_SET_CURRENT,
                                 payload: {current: coords}
                             }
                         } else {
-                            console.log("i get here")
-                            return {
-                                type: ACTION_CLEAR_CURRENT,
-                                payload: {}
-                            }
+                            return {type: ACTION_CLEAR_CURRENT}
                         }
-                    default:
-                        return {type: ACTION_CLEAR_CURRENT}
-                }
-                return EMPTY;
+                    }
+                )
             }
         )
-    );
+    )
+const catchCityChangeEpic = (action$, state$) =>
+    action$.pipe(
+        ofType(ACTION_SET_CHOICE),
+        map(action => {
+            const currentCity = action.payload.choice;
+            console.log("catch city change")
+            if (currentCity) {
+                return {
+                    type: ACTION_SET_CURRENT,
+                    payload: {current: currentCity}
+                }
+            } else {
+                return {type: ACTION_CLEAR_CURRENT}
+            }
+        })
+    )
 
 export const geolocationEpic = combineEpics(
-    setCurrentEpic,
+    catchCityChangeEpic,
+    setMethodToGeoEpic,
+    setMethodToCityEpic
 );

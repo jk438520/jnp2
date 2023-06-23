@@ -1,7 +1,7 @@
 import React from "react";
 import Select from 'react-select';
 import {useDispatch, useSelector} from "react-redux";
-import {setChoice, setSearch} from "./reducer";
+import {clearChoice, setChoice, setSearch} from "./reducer";
 import {BY_CITY_NAME} from "../reducer";
 
 export const CityChoice = () => {
@@ -19,7 +19,10 @@ export const CityChoice = () => {
                 isDisabled={currentMethod.localeCompare(BY_CITY_NAME)}
                 onChange={(e) => {
                     console.log("onChange e: ", e);
-                    dispatch(setChoice({choice: e}));
+                    if(e)
+                        dispatch(setChoice({choice: e}));
+                    else
+                        dispatch(clearChoice());
                 }}
                 onInputChange={(e) => {
                     console.log("onInputChange e: ", e);

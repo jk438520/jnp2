@@ -1,19 +1,25 @@
 import React from "react";
-import {useSelector} from "react-redux";
-
-export const FORECAST_TYPES = {
-    HOURLY: 'HOURLY',
-    DAILY: 'DAILY',
-    CURRENT: 'CURRENT',
-}
+import {useDispatch, useSelector} from "react-redux";
+import Select from "react-select";
+import {FORECAST_TYPES} from "./const";
+import {setCurrentType} from "./reducer";
+import {WeatherDisplay} from "./weather-display";
 
 export const Weather = () => {
-    const cityInfo = useSelector(state => state.cityChoice.choice);
+    const dispatch = useDispatch();
+    const currentType = useSelector(state => state.weather.currentType);
+
+    const currentInfo = useSelector(state => state.geolocation.current);
     return (
         <div>
-            <h1>Weather</h1>
-            {JSON.stringify(cityInfo)}
-            {}
+            <h2>Weather</h2>
+            <Select
+                value={currentType}
+                options={FORECAST_TYPES}
+                onChange={(e) => dispatch(setCurrentType({currentType: e}))}
+            />
+            {JSON.stringify(currentInfo)}
+            <WeatherDisplay/>
         </div>
     );
 }

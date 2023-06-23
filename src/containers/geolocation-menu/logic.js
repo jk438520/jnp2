@@ -1,14 +1,18 @@
+const geolocationAPI = navigator.geolocation;
 
-const success = (position) => {
-    const lat = position.coords.latitude;
-    const lng = position.coords.longitude;
-    return { lat, lng };
-}
+let userCoordinates = new Promise((resolve, reject) => {
+    geolocationAPI.getCurrentPosition((position) => {
+        console.log("position: ", position.coords);
+        resolve(position.coords);
+    }, (error) => {
+        reject(error);
+    });
+});
 
-const error = () => {
-    return null;
-}
-export const getGeolocation = () => {
-    console.log("getGeolocation");
-    return null;
+
+
+export async function getUserCoordinates(){
+    userCoordinates = await userCoordinates;
+    console.log("in getUserCoordinates", {lat: userCoordinates.latitude, lon: userCoordinates.longitude})
+    return {lat: userCoordinates.latitude, lon: userCoordinates.longitude};
 }
