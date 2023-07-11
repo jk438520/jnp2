@@ -8,12 +8,6 @@ import {WeatherDisplayWrapper} from "./WeatherDisplayWrapper";
 
 const R = require('ramda');
 
-const timestampWithinDay = (timestamp) => {
-    const now = new Date();
-    const nextDay = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-    const date = new Date(timestamp * 1000);
-    return date >= now && date <= nextDay;
-}
 
 export const WeatherDisplay = () => {
     const status = useSelector(state => state.weather.status);
@@ -39,11 +33,12 @@ export const WeatherDisplay = () => {
                         </WeatherDisplayWrapper>
                     )
                 case 'hourly':
+                    const now = new Date().getTime();
                     const forecasts =
                         R.pipe(
                             R.map((forecast) => forecast.hour),
                             R.flatten,
-                            R.filter((forecast) => timestampWithinDay(forecast.time_epoch)),
+                            R.filter((forecast) => now <= forecast.time_epoch * 1000),
                         )(currentForecast.forecast.forecastday);
                     return (<WeatherDisplayWrapper>
                         {R.map((forecast) => <WeatherDay data={forecast} time={forecast.time}/>, forecasts)}

@@ -7,5 +7,4 @@ export const WeatherDisplayWrapper = styled.div`
   width: 100%;
   overflow: scroll;
   gap: 10px;
-  justify-content: space-evenly;
 `;

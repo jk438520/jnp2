@@ -3,7 +3,7 @@ import {WEATHER_ACTION_SET_CACHED_FORECASTS, WEATHER_ACTION_SET_CURRENT_TYPE, WE
 import {mergeMap} from "rxjs/operators";
 import {EMPTY, filter, map, Observable} from "rxjs";
 import {stringifyCoords} from "./weather-display/logic";
-import {API_KEY, WEATHER_API} from "../../config";
+import {WEATHER_API_KEY, WEATHER_API} from "../../config";
 import {ACTION_CLEAR_CURRENT, ACTION_SET_CURRENT} from "../geolocation-menu/reducer";
 import {RESOURCE_STATUS} from "./const";
 
@@ -45,24 +45,14 @@ const fetchWeatherForecastEpic = (action$, state$) => action$.pipe(
     filter(() => {
         const query = stringifyCoords(state$.value.geolocation.current);
         const cachedForecast = state$.value.weather.cachedForecasts[query];
-        console.log("cachedForecast", cachedForecast);
         const currTime = new Date().getTime();
-        console.log("currTime", currTime);
-        if(cachedForecast) {
-            console.log("cachedForecast.current.last_updated_epoch", cachedForecast.current.last_updated_epoch);
-        } else {
-            console.log("cachedForecast.current.last_updated_epoch", "undefined");
-        }
         const cacheIs15Min = cachedForecast && ((cachedForecast.current.last_updated_epoch + 15 * 60) * 1000 < currTime)
-        console.log("cacheIs15Min", cacheIs15Min);
-        console.log("!cachedForecast || cacheIs15Min", !cachedForecast || cacheIs15Min);
         return !cachedForecast || cacheIs15Min;
     }),
     mergeMap(
         action => {
-            console.log("fetch weather forecast");
             const query = stringifyCoords(state$.value.geolocation.current);
-            return fetch(`${WEATHER_API}/forecast.json?key=${API_KEY}&q=${query}&days=3`)
+            return fetch(`${WEATHER_API}/forecast.json?key=${WEATHER_API_KEY}&q=${query}&days=3`)
                 .then(response => response.json())
                 .then(data => {
                         return {

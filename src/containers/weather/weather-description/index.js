@@ -9,7 +9,6 @@ const scoreWeather = (weather) => {
     const conditions = R.map((forcastday) => forcastday.day.condition.text.toLowerCase(), weather.forecast.forecastday);
     const keywords = ['rain', 'sleet', 'snow', 'thunderstorm', 'drizzle'];
     if (!R.any((keyword) => R.any((condition) => condition.indexOf(keyword) !== -1, conditions), keywords)) {
-        console.log("no rain");
         score += 1;
     }
     const avgTemp = R.pipe(
@@ -17,7 +16,6 @@ const scoreWeather = (weather) => {
         R.mean,
     )(weather.forecast.forecastday);
     if (18 <= avgTemp && avgTemp <= 25) {
-        console.log("avg temp");
         score += 1;
     }
     const minTemps = R.map((forcastday) => forcastday.day.mintemp_c, weather.forecast.forecastday);
@@ -25,7 +23,6 @@ const scoreWeather = (weather) => {
     const minTemp = R.reduce(R.min, Infinity, minTemps);
     const maxTemp = R.reduce(R.max, -Infinity, maxTemps);
     if (15 <= minTemp && maxTemp <= 30) {
-        console.log("min/max temp");
         score += 1;
     }
     switch (score) {

@@ -9,6 +9,7 @@ import {WeatherDescription} from "./weather-description";
 export const Weather = () => {
     const dispatch = useDispatch();
     const currentType = useSelector(state => state.weather.currentType);
+    const gifurl = useSelector(state => state.image.image);
     return (
         <div>
             <h2>Weather</h2>
@@ -19,6 +20,7 @@ export const Weather = () => {
                 onChange={(e) => dispatch(setCurrentType({currentType: e}))}
             />
             <WeatherDisplay/>
+            <img src={gifurl} alt="gif"/>
         </div>
     );
 }

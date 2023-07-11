@@ -17,6 +17,7 @@ const imageSlice = createSlice({
         },
         reducers: {
             [SET_IMAGE]: (state, action) => {
+                console.log('imageSlice', action.payload)
                 state.image = action.payload.image;
                 state.status = RECOURCE_STATUS.READY;
             },
@@ -31,4 +32,5 @@ const imageSlice = createSlice({
     }
 )
 
+export const {setImage, clearImage, setStatus} = imageSlice.actions;
 export default imageSlice.reducer;
