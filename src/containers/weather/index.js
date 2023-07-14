@@ -6,11 +6,11 @@ import {setCurrentType} from "./reducer";
 import {WeatherDisplay} from "./weather-display";
 import {WeatherDescription} from "./weather-description";
 import {WeatherWrapper} from "./WeatherWrapper";
+import {GifDisplay} from "./weather-description/weather-gif";
 
 export const Weather = () => {
     const dispatch = useDispatch();
     const currentType = useSelector(state => state.weather.currentType);
-    const gifurl = useSelector(state => state.image.image);
     return (
         <WeatherWrapper>
             <h2>Weather</h2>
@@ -21,7 +21,7 @@ export const Weather = () => {
                 onChange={(e) => dispatch(setCurrentType({currentType: e}))}
             />
             <WeatherDisplay/>
-            <img src={gifurl} alt="gif"/>
+            <GifDisplay/>
         </WeatherWrapper>
     );
 }

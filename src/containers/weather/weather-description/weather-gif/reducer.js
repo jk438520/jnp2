@@ -17,7 +17,6 @@ const imageSlice = createSlice({
         },
         reducers: {
             [SET_IMAGE]: (state, action) => {
-                console.log('imageSlice', action.payload)
                 state.image = action.payload.image;
                 state.status = RECOURCE_STATUS.READY;
             },
@@ -27,6 +26,8 @@ const imageSlice = createSlice({
             },
             [SET_STATUS]: (state, action) => {
                 state.status = action.payload.status;
+                if(state.status === RECOURCE_STATUS.NONE || state.status === RECOURCE_STATUS.LOADING)
+                    state.image = null;
             }
         }
     }
