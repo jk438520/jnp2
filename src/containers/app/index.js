@@ -1,17 +1,24 @@
 import React from 'react';
-import { ThemeProvider } from 'styled-components';
-import { theme } from '../../themes';
-import { GlobalStyle } from '../../global-styles';
-
+import styled, {ThemeProvider} from 'styled-components';
+import {darkTheme, lightTheme} from '../../themes';
+import {GlobalStyle} from '../../global-styles';
 import {Forecast} from '../forecast';
+import {useSelector} from "react-redux";
 
-export const App = () => (
-    <ThemeProvider theme={theme}>
-        <>
-            <GlobalStyle />
+export const App = () => {
+        const theme = useSelector(state => {
+            if (state.theme.darkTheme) {
+                return darkTheme;
+            } else {
+                return lightTheme;
+            }
+        });
+        return (<ThemeProvider theme={theme}>
+                    <GlobalStyle/>
 
-            <Forecast />
-        </>
-    </ThemeProvider>
-);
+                    <Forecast/>
+            </ThemeProvider>
+        )
+    }
+;
 

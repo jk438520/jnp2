@@ -1,4 +1,4 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice, current} from "@reduxjs/toolkit";
 
 export const GEOLOCATION = 'geolocation';
 export const BY_CITY_NAME = 'byCityName';
@@ -46,7 +46,8 @@ const geolocationSlice = createSlice({
     }
 })
 
-
+export const geolocationIsChosen = (state) => state.current !== null
+export const selectCurrentGeolocation = (state) => state.current
 export const {setCurrent, setStatus, setCurrentMethod, clearCurrent} = geolocationSlice.actions;
 
 export default geolocationSlice.reducer;

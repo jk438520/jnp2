@@ -9,6 +9,15 @@ import {WeatherDisplayWrapper} from "./WeatherDisplayWrapper";
 const R = require('ramda');
 
 
+const getHourlyForecasts = (forecastDays) => {
+    const now = new Date().getTime();
+    return R.pipe(
+        R.map((forecast) => forecast.hour),
+        R.flatten,
+        R.filter((forecast) => now <= forecast.time_epoch * 1000),
+    )(forecastDays);
+}
+
 export const WeatherDisplay = () => {
     const status = useSelector(state => state.weather.status);
     const currentQuery = useSelector(state => stringifyCoords(state.geolocation.current));
@@ -33,15 +42,11 @@ export const WeatherDisplay = () => {
                         </WeatherDisplayWrapper>
                     )
                 case 'hourly':
-                    const now = new Date().getTime();
-                    const forecasts =
-                        R.pipe(
-                            R.map((forecast) => forecast.hour),
-                            R.flatten,
-                            R.filter((forecast) => now <= forecast.time_epoch * 1000),
-                        )(currentForecast.forecast.forecastday);
                     return (<WeatherDisplayWrapper>
-                        {R.map((forecast) => <WeatherDay data={forecast} time={forecast.time}/>, forecasts)}
+                        {R.map((forecast) =>
+                                <WeatherDay data={forecast}
+                                            time={forecast.time}/>,
+                            getHourlyForecasts(currentForecast.forecast.forecastday))}
                     </WeatherDisplayWrapper>)
                 case 'daily':
                     return (<WeatherDisplayWrapper>

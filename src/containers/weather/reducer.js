@@ -32,6 +32,14 @@ export const weatherSlice = createSlice({
     }
 })
 
+export const selectCurrentForecast = (state, query) => state.cachedForecasts[query];
+export const forecastIsOld = (state, query) => {
+    const cachedForecast = state.cachedForecasts[query];
+    const currTime = new Date().getTime();
+    const cacheIs15Min = cachedForecast && ((cachedForecast.current.last_updated_epoch + 15 * 60) * 1000 < currTime)
+    return !cachedForecast || cacheIs15Min;
+}
+
 export const {setCurrentType} = weatherSlice.actions;
 
 export default weatherSlice.reducer;

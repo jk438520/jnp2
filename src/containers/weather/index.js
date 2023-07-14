@@ -5,13 +5,14 @@ import {FORECAST_TYPES} from "./const";
 import {setCurrentType} from "./reducer";
 import {WeatherDisplay} from "./weather-display";
 import {WeatherDescription} from "./weather-description";
+import {WeatherWrapper} from "./WeatherWrapper";
 
 export const Weather = () => {
     const dispatch = useDispatch();
     const currentType = useSelector(state => state.weather.currentType);
     const gifurl = useSelector(state => state.image.image);
     return (
-        <div>
+        <WeatherWrapper>
             <h2>Weather</h2>
             <WeatherDescription/>
             <Select
@@ -21,6 +22,6 @@ export const Weather = () => {
             />
             <WeatherDisplay/>
             <img src={gifurl} alt="gif"/>
-        </div>
+        </WeatherWrapper>
     );
 }

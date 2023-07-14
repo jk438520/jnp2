@@ -7,9 +7,12 @@ import weatherReducer from './containers/weather/reducer';
 import {WEATHER} from "./containers/weather/reducer";
 import imageReducer from './containers/weather/weather-description/weather-gif/reducer';
 import {IMAGE} from "./containers/weather/weather-description/weather-gif/reducer";
+import themeReducer from './themes/reducer';
+import {THEME} from "./themes/reducer";
 export const rootReducer = combineReducers({
     [CITY_CHOICE]: cityChoiceReducer,
     [GEOLOCATION]: geolocationReducer,
     [WEATHER]: weatherReducer,
-    [IMAGE]: imageReducer
+    [IMAGE]: imageReducer,
+    [THEME]: themeReducer
 });
